@@ -93,5 +93,4 @@ module.exports.getAddCodes = async function (USERNAME, PASSWORD, TERM) {
   }
   await browser.close();
   return allAddCodes;
-
 }
