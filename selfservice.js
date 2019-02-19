@@ -65,7 +65,11 @@ async function getSectionAddCodes(TERM, browser, sectionLink) {
   await page.waitForSelector('#faculty-permissions-nav > div.clear-group > div > div:nth-child(4) > a');
   await page.click('#faculty-permissions-nav > div.clear-group > div > div:nth-child(4) > a');
   await page.waitForSelector('#authorization-29-code'); // Hacky, but whatever
-  const addCodes = await page.evaluate(() => Array.from(document.querySelectorAll('td')).filter(cell => cell.getAttribute('data-role') === 'Authorization Code').map(cell => cell.textContent.trim()));
+  const addCodes = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('td'))
+      .filter(cell => cell.getAttribute('data-role') === 'Authorization Code')
+      .map(cell => cell.textContent.trim())
+  );
   await page.close();
   return {courseID: courseID, sectionID: sectionID, addCodes: addCodes};
 }
