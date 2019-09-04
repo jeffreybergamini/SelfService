@@ -4,12 +4,12 @@ async function login(USERNAME, PASSWORD, TERM) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://success.cabrillo.edu');
-  await page.waitForSelector('#UserName');
-  await page.click('#UserName');
+  await page.waitForSelector('#userNameInput');
+  await page.click('#userNameInput');
   await page.keyboard.type(USERNAME);
-  await page.click('#Password');
+  await page.click('#passwordInput');
   await page.keyboard.type(PASSWORD);
-  await page.click('#login-button');
+  await page.click('#submitButton');
   await page.waitForSelector('#faculty');
   await page.click('#faculty');
   return [browser, page];
@@ -37,8 +37,17 @@ async function getSectionStudents(TERM, browser, sectionLink) {
       row => Array.from(row.cells).map(
         cell => cell.textContent.trim())));
   const studentInfo = studentElements.map(cells => {
-    const name = cells[0];
-    const nameTokens = name.toLowerCase().split(/\s/);
+    let name = cells[0];
+    let nameTokens;
+    if (name.indexOf('\n') > 0) {
+      const nameComponents = name.split('\n');
+      name = nameComponents[0].trim();
+      nameTokens = name.toLowerCase().split(/\s/);
+      const pronouns = nameComponents[1].trim();
+      name = `${name} (${pronouns})`;
+    } else {
+      nameTokens = name.toLowerCase().split(/\s/);
+    }
     let username = (nameTokens.slice(0, nameTokens.length - 1).map(token => token[0]).join('') + nameTokens[nameTokens.length - 1]).replace(/[^A-Za-z]/g, '');
     if (username.length > 15)
       username = username.substring(0, 15);
