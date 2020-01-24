@@ -1,9 +1,12 @@
 const puppeteer = require('puppeteer');
 
 async function login(USERNAME, PASSWORD, TERM) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    //headless: false,
+    //slowMo: 250 // slow down by 250ms
+  });
   const page = await browser.newPage();
-  await page.goto('https://success.cabrillo.edu');
+  await page.goto('https://success.cabrillo.edu/Student/');
   await page.waitForSelector('#userNameInput');
   await page.click('#userNameInput');
   await page.keyboard.type(USERNAME);
@@ -12,6 +15,8 @@ async function login(USERNAME, PASSWORD, TERM) {
   await page.click('#submitButton');
   await page.waitForSelector('#faculty');
   await page.click('#faculty');
+  await page.goto('https://success.cabrillo.edu/Student/Student/Faculty');
+  await page.waitForSelector(`a[title$="${TERM}"]`);
   return [browser, page];
 }
 
@@ -44,7 +49,8 @@ async function getSectionStudents(TERM, browser, sectionLink) {
       name = nameComponents[0].trim();
       nameTokens = name.toLowerCase().split(/\s/);
       const pronouns = nameComponents[1].trim();
-      name = `${name} (${pronouns})`;
+      if (pronouns.length > 0)
+        name = `${name} (${pronouns})`;
     } else {
       nameTokens = name.toLowerCase().split(/\s/);
     }
