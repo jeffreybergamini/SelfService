@@ -9,6 +9,8 @@
   "author": "jbergamini@jeff.cis.cabrillo.edu",
   "license": "CC-BY-4.0",
   "dependencies": {
-    "puppeteer": "^2.0.0"
+    "ncu": "^0.2.1",
+    "puppeteer": "^14.0.0",
+    "sqlite3": "^5.0.11"
   }
 }
